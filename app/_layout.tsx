@@ -1,9 +1,12 @@
+import "react-native-gesture-handler";
+import "react-native-reanimated";
+
 import { ApolloClient, ApolloProvider, InMemoryCache } from "@apollo/client";
 import { useFonts } from "expo-font";
 import { Slot } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
-import { useCallback, useState } from "react";
-import { Text, View } from "react-native";
+import React, { useCallback, useState } from "react";
+import { View } from "react-native";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -47,10 +50,16 @@ const AppLayout = () => {
     return null;
   }
 
+  // React.useEffect(() => {
+  //   // This navigation event will trigger the error above.
+  //   if (fontsLoaded) {
+  //     router.push("/protected/map");
+  //   }
+  // }, [fontsLoaded]);
+
   return (
     <ApolloProvider client={apolloClient}>
-      <View onLayout={onLayoutRootView}>
-        <Text style={{ fontFamily: "Grinto" }}>something</Text>
+      <View style={{ flex: 1 }} onLayout={onLayoutRootView}>
         <Slot />
       </View>
       {/* If app is ready (fonts loaded, API calls made, etc) then app loads else splash screen is shown */}
