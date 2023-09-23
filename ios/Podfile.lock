@@ -7,7 +7,7 @@ PODS:
     - ExpoModulesCore
   - EXFileSystem (15.4.4):
     - ExpoModulesCore
-  - EXFont (11.4.0):
+  - EXFont (11.7.0):
     - ExpoModulesCore
   - Expo (49.0.11):
     - ExpoModulesCore
@@ -640,7 +640,7 @@ SPEC CHECKSUMS:
   EXApplication: 042aa2e3f05258a16962ea1a9914bf288db9c9a1
   EXConstants: ce5bbea779da8031ac818c36bea41b10e14d04e1
   EXFileSystem: 2b826a3bf1071a4b80a8457e97124783d1ac860e
-  EXFont: 738c44c390953ebcbab075a4848bfbef025fd9ee
+  EXFont: b5d79c5341f45b55c362e323735fe658003afc7a
   Expo: 8a2d2c235bcbe4f41774562a0635bd74c174858c
   ExpoHead: 82eda8e633ca25980d8ec46ba793a3df4e2b16fc
   ExpoKeepAwake: be4cbd52d9b177cde0fd66daa1913afa3161fc1d
