@@ -15,7 +15,18 @@
     "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.memorysun.app"
+      "bundleIdentifier": "com.memorysun.app",
+      "infoPlist": {
+        "LSApplicationQueriesSchemes": [
+          "rainbow",
+          "metamask",
+          "trust",
+          "safe",
+          "uniswap",
+          "zengo"
+          // family?
+        ]
+      }
     },
     "android": {
       "adaptiveIcon": {
