@@ -1,12 +1,12 @@
-import { AnimatePresence } from "moti";
 import React, { useRef, useState } from "react";
 import { StyleSheet, View } from "react-native";
 import {
   Animated as AnimatedMap,
   AnimatedRegion,
+  Marker,
   Region,
 } from "react-native-maps";
-import { default as CirclePlusButton } from "../components/AddButton";
+import ActionModal from "../components/ActionModal";
 
 export default function Map() {
   const regionRef = useRef(
@@ -18,64 +18,68 @@ export default function Map() {
     })
   );
 
+  const mapRef = useRef(null);
+
   const [pressLocation, setPressLocation] = useState({ x: 0, y: 0 });
-  const [showAddButton, setShowAddButton] = useState<boolean>(false);
+  const [showAddButton, setShowAddButton] = useState(false);
+  const [markerCoordinate, setMarkerCoordinate] = useState(null);
+  const [showModal, setShowModal] = useState(false);
 
   const onRegionChange = (newRegion: Region) => {
     regionRef.current.setValue(newRegion);
   };
 
-  // todo use the correct types
   const onLongPress = (e: any) => {
-    setShowAddButton(true);
     const { latitude, longitude } = e.nativeEvent.coordinate;
-    // Step 3: Display animated buttons here
-    // Step 4: Implement slide to select logic here
-    console.log(
-      `Long-pressed at latitude: ${latitude}, longitude: ${longitude}`
-    );
+    setMarkerCoordinate({ latitude, longitude });
+
+    // Update the region to zoom in
+    // Define the zoom level and offset for latitude
+    const latitudeDelta = 0.005;
+    const longitudeDelta = 0.005;
+    const offset = latitudeDelta / 2;
+
+    const newRegion = {
+      latitude: latitude - offset, // Offset the latitude so the marker appears in the top 1/3 of the screen
+      longitude,
+      latitudeDelta,
+      longitudeDelta,
+    };
+
+    if (mapRef.current) {
+      mapRef.current.animateToRegion(newRegion, 2000); // 2000 ms animation duration
+    }
+
+    setShowModal(true); // Show the ActionModal
   };
 
   const handleTouchStart = (e) => {
-    console.log(e.nativeEvent.pageX);
-
     setPressLocation({
       x: e.nativeEvent.pageX,
       y: e.nativeEvent.pageY,
     });
   };
 
-  // const handleOnTouchend = (e) => {
-  //   setShowAddButton(false);
-  // };
-
   return (
-    <View
-      style={styles.container}
-      onTouchStart={handleTouchStart}
-      // onTouchEnd={handleOnTouchend}
-    >
+    <View style={styles.container} onTouchStart={handleTouchStart}>
       <AnimatedMap
+        ref={mapRef}
         showsUserLocation
         region={regionRef.current as any}
-        onRegionChange={(newRegion) => onRegionChange(newRegion)}
+        onRegionChange={onRegionChange}
         onLongPress={onLongPress}
         style={{ width: "100%", height: "100%" }}
-      />
+      >
+        {markerCoordinate && <Marker coordinate={markerCoordinate} />}
+      </AnimatedMap>
 
-      <AnimatePresence>
-        {showAddButton && (
-          <View
-            style={{
-              position: "absolute",
-              top: pressLocation.y - 25,
-              left: pressLocation.x - 25,
-            }}
-          >
-            <CirclePlusButton handlePress={() => console.log("pressed")} />
-          </View>
-        )}
-      </AnimatePresence>
+      <ActionModal
+        visible={showModal}
+        onClose={() => {
+          setMarkerCoordinate(null);
+          setShowModal(false);
+        }}
+      />
     </View>
   );
 }
@@ -91,3 +95,17 @@ const styles = StyleSheet.create({
     height: "100%",
   },
 });
+
+/* <AnimatePresence>
+        {showAddButton && (
+          <View
+            style={{
+              position: "absolute",
+              top: pressLocation.y - 25,
+              left: pressLocation.x - 25,
+            }}
+          >
+            <CirclePlusButton handlePress={() => console.log("pressed")} />
+          </View>
+        )}
+      </AnimatePresence> */
