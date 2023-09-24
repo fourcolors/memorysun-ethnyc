@@ -1,4 +1,5 @@
 import { assoc } from "ramda";
+import { Address } from "viem";
 import { create } from "zustand";
 import { createJSONStorage, persist } from "zustand/middleware";
 
@@ -23,6 +24,14 @@ const zustandStorage: StateStorage = {
 interface AuthStorage {
   token: string;
   refreshToken: string;
+  client: any;
+  publicClient: any;
+  address: Address | null;
+  verified: boolean;
+  setVerified: (v: boolean) => void;
+  setAddress: (address: Address) => void;
+  setClient: (client: any) => void;
+  setPublicClient: (publicClient: any) => void;
   setToken: (token: string) => void;
   setRefreshToken: (refreshToken: string) => void;
 }
@@ -32,8 +41,16 @@ export const useAuthStorage = create<AuthStorage>()(
     (set, get) => ({
       token: "",
       refreshToken: "",
-      // Use Ramda's assoc function for setting token and refreshToken
+      client: null,
+      address: null,
+      publicClient: null,
+      verified: false,
+      setVerified: (v: boolean) => set(assoc("verified", v)),
+      setAddress: (address: Address) => set(assoc("address", address)),
       setToken: (token: string) => set((state) => assoc("token", token, state)),
+      setClient: (client: any) => set(assoc("client", client)),
+      setPublicClient: (publicClient: any) =>
+        set(assoc("publicClient", publicClient)),
       setRefreshToken: (refreshToken: string) =>
         set((state) => assoc("refreshToken", refreshToken, state)),
     }),

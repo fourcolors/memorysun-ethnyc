@@ -8,7 +8,13 @@
 import "fast-text-encoding";
 
 import { useAuthStorage } from "@/store/authStore";
-import { ApolloClient, ApolloProvider, InMemoryCache } from "@apollo/client";
+import {
+  ApolloClient,
+  ApolloLink,
+  ApolloProvider,
+  HttpLink,
+  InMemoryCache,
+} from "@apollo/client";
 import { setContext } from "@apollo/client/link/context";
 import { NavigationContainer } from "@react-navigation/native";
 import { WalletConnectModal } from "@walletconnect/modal-react-native";
@@ -16,6 +22,10 @@ import "react-native-gesture-handler";
 import "react-native-reanimated";
 import AppNavigator from "./AppNavigation"; // adjust the import as needed
 const APIURL = "https://api-v2-mumbai.lens.dev/";
+
+const httpLink = new HttpLink({
+  uri: APIURL,
+});
 
 const authLink = setContext((_, { headers }) => {
   const token = useAuthStorage((state) => state.token);
@@ -28,7 +38,7 @@ const authLink = setContext((_, { headers }) => {
 });
 
 export const apolloClient = new ApolloClient({
-  uri: APIURL,
+  link: ApolloLink.from([authLink, httpLink]),
   cache: new InMemoryCache(),
 });
 
@@ -45,6 +55,7 @@ export default function App() {
       universal: ".com",
     },
   };
+
   return (
     <ApolloProvider client={apolloClient}>
       <WalletConnectModal
