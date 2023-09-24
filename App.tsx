@@ -1,9 +1,15 @@
 // Globals
-global.TextEncoder = require("text-encoding").TextEncoder;
+// global.TextEncoder = require("text-encoding").TextEncoder;
+// import './shim.js';
+// import { TextDecoder, TextEncoder } from "text-encoding";
+
+// global.TextEncoder = global.TextEncoder || TextEncoder;
+// global.TextDecoder = global.TextDecoder || TextDecoder;
+import "fast-text-encoding";
 
 import { ApolloClient, ApolloProvider, InMemoryCache } from "@apollo/client";
 import { NavigationContainer } from "@react-navigation/native";
-import React from "react";
+import { WalletConnectModal } from "@walletconnect/modal-react-native";
 import "react-native-gesture-handler";
 import "react-native-reanimated";
 import AppNavigator from "./AppNavigation"; // adjust the import as needed
@@ -15,8 +21,22 @@ export const apolloClient = new ApolloClient({
 });
 
 export default function App() {
+  const projectId = 'da92e4806f454ed1669d49752762e627'
+
+const providerMetadata = {
+  name: 'Memory Sun',
+  description: 'Memory Sun - Public Shared Memory',
+  url: 'https://www.momorysun.com/',
+  icons: ['https://your-project-logo.com/'],
+  redirect: {
+    native: 'com.memorysun.app://',
+    universal: '.com'
+  }
+}
   return (
     <ApolloProvider client={apolloClient}>
+            <WalletConnectModal projectId={projectId} providerMetadata={providerMetadata} />
+
       <NavigationContainer>
         <AppNavigator />
       </NavigationContainer>

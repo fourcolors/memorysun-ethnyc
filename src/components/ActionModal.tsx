@@ -71,7 +71,6 @@ const ActionModal = ({ visible, onClose }) => {
           <CloseBar />
         </View>
         <View>
-          <Text>{data.ping}</Text>
           <Text>address: {address}</Text>
         </View>
       </TouchableOpacity>
