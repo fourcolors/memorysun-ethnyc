@@ -1,4 +1,5 @@
 // AppNavigator.tsx
+import { useAuthStorage } from "@/store/authStore";
 import { createStackNavigator } from "@react-navigation/stack";
 import { useFonts } from "expo-font";
 import * as SplashScreen from "expo-splash-screen";
@@ -9,6 +10,7 @@ import MapScreen from "./src/screens/Map"; // adjust path as needed
 const Stack = createStackNavigator();
 
 export default function AppNavigator() {
+  const token = useAuthStorage((state) => state.token);
   const [fontsLoaded, fontError] = useFonts({
     GrintoWide: require("./assets/fonts/ABCGintoNordWidthsVariable.ttf"),
     //  Grinto: require("../assets/fonts/ABCGintoNord.oft"), // not loading, punting on this
@@ -30,16 +32,19 @@ export default function AppNavigator() {
 
   return (
     <Stack.Navigator initialRouteName="Login">
-      <Stack.Screen
-        name="Login"
-        component={LoginScreen}
-        options={{ headerShown: false }}
-      />
-      <Stack.Screen
-        name="Map"
-        component={MapScreen}
-        options={{ headerShown: false }}
-      />
+      {token ? (
+        <Stack.Screen
+          name="Map"
+          component={MapScreen}
+          options={{ headerShown: false }}
+        />
+      ) : (
+        <Stack.Screen
+          name="Login"
+          component={LoginScreen}
+          options={{ headerShown: false }}
+        />
+      )}
     </Stack.Navigator>
   );
 }

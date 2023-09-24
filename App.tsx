@@ -18,6 +18,7 @@ import {
 import { setContext } from "@apollo/client/link/context";
 import { NavigationContainer } from "@react-navigation/native";
 import { WalletConnectModal } from "@walletconnect/modal-react-native";
+import { useEffect } from "react";
 import "react-native-gesture-handler";
 import "react-native-reanimated";
 import AppNavigator from "./AppNavigation"; // adjust the import as needed
@@ -29,6 +30,7 @@ const httpLink = new HttpLink({
 
 const authLink = setContext((_, { headers }) => {
   const token = useAuthStorage((state) => state.token);
+
   return {
     headers: {
       ...headers,
@@ -44,6 +46,15 @@ export const apolloClient = new ApolloClient({
 
 export default function App() {
   const projectId = "da92e4806f454ed1669d49752762e627";
+  const token = useAuthStorage((state) => state.token);
+  const setVerified = useAuthStorage((state) => state.setVerified);
+
+  useEffect(() => {
+    // verify toekn here
+    if (token) {
+      setVerified(true); // todo
+    }
+  }, [token]);
 
   const providerMetadata = {
     name: "Memory Sun",
