@@ -41,7 +41,7 @@ const onConnect = () => {
 
   return (
     <SafeAreaView>
-      <TouchableOpacity onPress={onConnect}>
+      <TouchableOpacity onPress={() => open()}>
         <View style={{backgroundColor: 'lightblue', width: 200}}><Text>Login with wallet connect</Text></View>
       </TouchableOpacity>
     </SafeAreaView>
