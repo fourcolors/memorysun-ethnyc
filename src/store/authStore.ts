@@ -1,25 +1,24 @@
-import { assoc } from 'ramda';
+import { assoc } from "ramda";
 import { create } from "zustand";
-import { createJSONStorage, persist } from 'zustand/middleware';
+import { createJSONStorage, persist } from "zustand/middleware";
 
-import { MMKV } from 'react-native-mmkv';
-import { StateStorage } from 'zustand/middleware';
+import { MMKV } from "react-native-mmkv";
+import { StateStorage } from "zustand/middleware";
 
-const storage = new MMKV()
+const storage = new MMKV();
 
 const zustandStorage: StateStorage = {
   setItem: (name, value) => {
-    return storage.set(name, value)
+    return storage.set(name, value);
   },
   getItem: (name) => {
-    const value = storage.getString(name)
-    return value ?? null
+    const value = storage.getString(name);
+    return value ?? null;
   },
   removeItem: (name) => {
-    return storage.delete(name)
+    return storage.delete(name);
   },
-}
-
+};
 
 interface AuthStorage {
   token: string;
@@ -31,15 +30,16 @@ interface AuthStorage {
 export const useAuthStorage = create<AuthStorage>()(
   persist(
     (set, get) => ({
-      token: '',
-      refreshToken: '',
+      token: "",
+      refreshToken: "",
       // Use Ramda's assoc function for setting token and refreshToken
-      setToken: (token: string) => set(state => assoc('token', token, state)),
-      setRefreshToken: (refreshToken: string) => set(state => assoc('refreshToken', refreshToken, state)),
+      setToken: (token: string) => set((state) => assoc("token", token, state)),
+      setRefreshToken: (refreshToken: string) =>
+        set((state) => assoc("refreshToken", refreshToken, state)),
     }),
     {
-      name: 'auth-storage', // unique name for the storage item
-      storage: createJSONStorage(() => zustandStorage)
+      name: "auth-storage", // unique name for the storage item
+      storage: createJSONStorage(() => zustandStorage),
     }
   )
 );

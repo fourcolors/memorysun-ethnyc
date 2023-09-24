@@ -1,10 +1,11 @@
 import { gql } from "@apollo/client";
-import { MotiView, Text } from "moti";
+import { MotiView } from "moti";
 import React, { useEffect, useState } from "react";
-import { Dimensions, View } from "react-native";
+import { Dimensions, Text, View } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import Svg, { Rect } from "react-native-svg";
 import { walletClient } from "../wallet";
+import { RecordingButton } from "./RecordingButton";
 import { usePingQuery } from "./gql/ActionModal.generated";
 
 const CloseBar = () => (
@@ -24,6 +25,7 @@ const ActionModal = ({ visible, onClose }) => {
   const modalHeight = screenHeight * (2 / 3); // 2/3 of screen height
   const { loading, data, error } = usePingQuery();
   const [address, setAddress] = useState("");
+  const [recording, setRecording] = useState();
 
   useEffect(() => {
     async function getAddresses() {
@@ -34,6 +36,13 @@ const ActionModal = ({ visible, onClose }) => {
 
     getAddresses();
   }, []);
+
+  function handleDoneRecording(recordingURI: string) {
+    console.log("recording uri", recordingURI);
+    setRecording(recordingURI);
+
+    // post ot lest etc here
+  }
 
   return (
     <MotiView
@@ -70,10 +79,28 @@ const ActionModal = ({ visible, onClose }) => {
         <View style={{ alignItems: "center", margin: 10 }}>
           <CloseBar />
         </View>
-        <View>
-          <Text>address: {address}</Text>
-        </View>
       </TouchableOpacity>
+      <View className="flex-1">
+        <RecordingButton onDoneRecording={handleDoneRecording} />
+        {recording && (
+          <MotiView
+            from={{ translateY: 50, opacity: 0 }}
+            animate={{ translateY: 0, opacity: 1 }}
+            transition={{ type: "timing", duration: 500 }}
+          >
+            <TouchableOpacity
+              className=" bg-yellow-500 hover:bg-yellow-600 py-10 focus:bg-yellow-700 active:bg-yellow-100 p-3 rounded-full"
+              activeOpacity={0.8}
+            >
+              <View className="flex items-center justify-center mb-5">
+                <Text className="text-black text-xl font-semibold">
+                  Post to Memory Sun
+                </Text>
+              </View>
+            </TouchableOpacity>
+          </MotiView>
+        )}
+      </View>
     </MotiView>
   );
 };

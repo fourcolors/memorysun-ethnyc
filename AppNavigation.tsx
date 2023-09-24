@@ -29,7 +29,7 @@ export default function AppNavigator() {
   }, []);
 
   return (
-    <Stack.Navigator initialRouteName="Login">
+    <Stack.Navigator initialRouteName="Map">
       <Stack.Screen
         name="Login"
         component={LoginScreen}
