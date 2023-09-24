@@ -1,4 +1,5 @@
 import { useAuthStorage } from "@/store/authStore";
+import { AuthChallengeResult, SignedAuthChallenge } from "@/types";
 import { gql } from "@apollo/client";
 import { useEffect } from "react";
 import React, { Image, Text, TouchableOpacity, View } from "react-native";

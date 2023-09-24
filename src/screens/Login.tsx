@@ -3,9 +3,10 @@ import { useAuthStorage } from "@/store/authStore";
 import { useWalletConnectModal } from "@walletconnect/modal-react-native";
 import { SafeAreaView } from "moti";
 import { useEffect } from "react";
-import { Text, TouchableOpacity, View } from "react-native";
+import { Image, Text, TouchableOpacity, View } from "react-native";
 import { Address, createPublicClient, createWalletClient, custom } from "viem";
 import { polygonMumbai } from "viem/chains";
+import WCLogo from "../../assets/wc-logo.png";
 
 const WalletConnectButton = ({ onConnect }) => {
   return (
@@ -14,7 +15,8 @@ const WalletConnectButton = ({ onConnect }) => {
         onPress={onConnect}
         className="flex items-center justify-center bg-blue-500 hover:bg-blue-600 focus:bg-blue-700 active:bg-blue-800 p-4 rounded-lg shadow-lg transition duration-300 ease-in-out"
       >
-        <Text className="text-white text-lg">Connect Wallet</Text>
+        <Image style={{ width: 50, height: 50, margin: 20 }} source={WCLogo} />
+        <Text className="text-white text-lg font-bold">Connect Wallet</Text>
       </TouchableOpacity>
     </View>
   );
@@ -57,7 +59,7 @@ export default function Login() {
 
   return (
     <SafeAreaView className="flex-1">
-      {isConnected && provider ? (
+      {false ? (
         <LoginWithLensButton />
       ) : (
         <WalletConnectButton onConnect={onConnect} />

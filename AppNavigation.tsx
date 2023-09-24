@@ -16,7 +16,7 @@ export default function AppNavigator() {
 
   return (
     <Stack.Navigator initialRouteName="Login">
-      {true ? (
+      {false ? (
         <Stack.Screen
           name="Map"
           component={MapScreen}
