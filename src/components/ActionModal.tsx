@@ -1,12 +1,15 @@
 import { gql } from "@apollo/client";
 import { MotiView } from "moti";
 import React, { useEffect, useState } from "react";
-import { Dimensions, Text, View } from "react-native";
+import { Dimensions, FlatList, Text, View } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import Svg, { Rect } from "react-native-svg";
 import { walletClient } from "../wallet";
 import { RecordingButton } from "./RecordingButton";
+import PhotoUploadButton from "./UploadPhotoButton";
 import { usePingQuery } from "./gql/ActionModal.generated";
+
+const screenWidth = Dimensions.get("window").width;
 
 const CloseBar = () => (
   <Svg width="48" height="6" viewBox="0 0 48 6" fill="none">
@@ -26,6 +29,7 @@ const ActionModal = ({ visible, onClose }) => {
   const { loading, data, error } = usePingQuery();
   const [address, setAddress] = useState("");
   const [recording, setRecording] = useState();
+  const [photo, setPhoto] = useState();
 
   useEffect(() => {
     async function getAddresses() {
@@ -43,6 +47,23 @@ const ActionModal = ({ visible, onClose }) => {
 
     // post ot lest etc here
   }
+
+  function handlePhotoSelected(photoURI: string) {
+    console.log("recording uri", photoURI);
+    setPhoto(photoURI);
+  }
+
+  const buttons = [
+    {
+      id: "1",
+      component: <RecordingButton onDoneRecording={handleDoneRecording} />,
+    },
+    {
+      id: "2",
+      component: <PhotoUploadButton onPhotoSelected={handlePhotoSelected} />,
+    },
+    // ... other buttons
+  ];
 
   return (
     <MotiView
@@ -81,8 +102,25 @@ const ActionModal = ({ visible, onClose }) => {
         </View>
       </TouchableOpacity>
       <View className="flex-1">
-        <RecordingButton onDoneRecording={handleDoneRecording} />
-        {recording && (
+        <View className="flex-1">
+          <FlatList
+            style={{ flex: 1 }}
+            horizontal
+            pagingEnabled
+            showsHorizontalScrollIndicator={false}
+            data={buttons}
+            keyExtractor={(item) => item.id}
+            renderItem={({ item }) => (
+              <View
+                style={{ width: screenWidth }}
+                className="flex-1 justify-center items-center "
+              >
+                {item.component}
+              </View>
+            )}
+          />
+        </View>
+        {(recording || photo) && (
           <MotiView
             from={{ translateY: 50, opacity: 0 }}
             animate={{ translateY: 0, opacity: 1 }}
