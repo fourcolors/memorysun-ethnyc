@@ -17,6 +17,7 @@
     ".expo/types/**/*.ts",
     "expo-env.d.ts",
     "**/*.ttf",
-    "**/*.otf"
+    "**/*.otf",
+    "**/*.jpeg"
   ]
 }

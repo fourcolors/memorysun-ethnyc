@@ -23,7 +23,7 @@ gql`
   }
 `;
 
-const ActionModal = ({ visible, onClose }) => {
+const ActionModal = ({ visible, onClose, onSave }) => {
   const screenHeight = Dimensions.get("window").height;
   const modalHeight = screenHeight * (2 / 3); // 2/3 of screen height
   const { loading, data, error } = usePingQuery();
@@ -62,8 +62,23 @@ const ActionModal = ({ visible, onClose }) => {
       id: "2",
       component: <PhotoUploadButton onPhotoSelected={handlePhotoSelected} />,
     },
-    // ... other buttons
   ];
+
+  function addMemoryToMap() {
+    let contentType;
+    let contentURI;
+    if (photo) {
+      contentType = "image";
+      contentURI = photo;
+    }
+    if (recording) {
+      contentType = "audio";
+      contentURI = recording;
+    }
+
+    onSave(contentType, contentURI);
+    onClose();
+  }
 
   return (
     <MotiView
@@ -129,6 +144,7 @@ const ActionModal = ({ visible, onClose }) => {
             <TouchableOpacity
               className=" bg-yellow-500 hover:bg-yellow-600 py-10 focus:bg-yellow-700 active:bg-yellow-100 p-3 rounded-full"
               activeOpacity={0.8}
+              onPress={addMemoryToMap}
             >
               <View className="flex items-center justify-center mb-5">
                 <Text className="text-black text-xl font-semibold">

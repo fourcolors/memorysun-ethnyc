@@ -1,4 +1,6 @@
-import React, { useRef, useState } from "react";
+import MemoryModal from "@/components/MemoryModal";
+import { useMarkerStorage } from "@/store/appStore";
+import { useEffect, useRef, useState } from "react";
 import { StyleSheet, View } from "react-native";
 import {
   Animated as AnimatedMap,
@@ -8,7 +10,44 @@ import {
 } from "react-native-maps";
 import ActionModal from "../components/ActionModal";
 
+// interface ICoordinate {
+//   latitude: number;
+//   longitude: number;
+// }
+
+// interface IMarkerData {
+//   coordinate: ICoordinate;
+//   contentType: "image" | "audio";
+//   contentUrl: string;
+// }
+
+// const markerData: IMarkerData[] = [
+//   {
+//     coordinate: { latitude: 40.765090592441226, longitude: -74.00127220343919 },
+//     contentType: "image",
+//     contentUrl: "https://example.com/image.jpg",
+//   },
+//   {
+//     coordinate: { latitude: 40.73724035334979, longitude: -74.01048585126827 },
+//     contentType: "audio",
+//     contentUrl: "https://example.com/audio.m4a",
+//   },
+//   {
+//     coordinate: { latitude: 40.71271668840441, longitude: -74.01226299151534 },
+//     contentType: "image",
+//     contentUrl: "https://example.com/another-image.jpg",
+//   },
+// ];
+
 export default function Map() {
+  const markers = useMarkerStorage((state) => state.markers);
+  const addMarker = useMarkerStorage((state) => state.addMarker);
+  const [pressLocation, setPressLocation] = useState({ x: 0, y: 0 });
+  const [markerCoordinate, setMarkerCoordinate] = useState(null);
+  const [showModal, setShowModal] = useState(false);
+  const [showMemoryModal, setShowMemoryModal] = useState(false);
+  const [currentMemory, setCurrentMemory] = useState();
+
   const regionRef = useRef(
     new AnimatedRegion({
       latitude: 40.7434,
@@ -20,10 +59,13 @@ export default function Map() {
 
   const mapRef = useRef(null);
 
-  const [pressLocation, setPressLocation] = useState({ x: 0, y: 0 });
-  const [showAddButton, setShowAddButton] = useState(false);
-  const [markerCoordinate, setMarkerCoordinate] = useState(null);
-  const [showModal, setShowModal] = useState(false);
+  useEffect(() => {
+    const coordinates = markers.map((data) => data.coordinate);
+    mapRef.current.fitToCoordinates(coordinates, {
+      edgePadding: { top: 100, right: 100, bottom: 100, left: 100 },
+      animated: true,
+    });
+  }, [markers]);
 
   const onRegionChange = (newRegion: Region) => {
     regionRef.current.setValue(newRegion);
@@ -31,6 +73,7 @@ export default function Map() {
 
   const onLongPress = (e: any) => {
     const { latitude, longitude } = e.nativeEvent.coordinate;
+    console.log("lat:", latitude, "long:", longitude);
     setMarkerCoordinate({ latitude, longitude });
 
     // Update the region to zoom in
@@ -60,6 +103,10 @@ export default function Map() {
     });
   };
 
+  function handleOpenMemory(marker) {
+    setCurrentMemory(marker);
+  }
+
   return (
     <View style={styles.container} onTouchStart={handleTouchStart}>
       <AnimatedMap
@@ -71,13 +118,46 @@ export default function Map() {
         style={{ width: "100%", height: "100%" }}
       >
         {markerCoordinate && <Marker coordinate={markerCoordinate} />}
+
+        {markers.map((marker, index) => (
+          <Marker
+            key={index}
+            coordinate={marker.coordinate}
+            onPress={() => {
+              setCurrentMemory(marker);
+              setShowMemoryModal(true);
+            }}
+          />
+        ))}
       </AnimatedMap>
 
       <ActionModal
+        onSave={({
+          contentType,
+          contentUrl,
+        }: {
+          contentType: "image" | "audio";
+          contentUrl: string;
+        }) => {
+          addMarker({
+            contentType,
+            contentUrl,
+            coordinate: markerCoordinate,
+          });
+        }}
         visible={showModal}
         onClose={() => {
           setMarkerCoordinate(null);
           setShowModal(false);
+        }}
+      />
+
+      <MemoryModal
+        memory={currentMemory}
+        visible={showMemoryModal}
+        onClose={() => {
+          setShowMemoryModal(false);
+          setCurrentMemory(null);
         }}
       />
     </View>
@@ -95,17 +175,3 @@ const styles = StyleSheet.create({
     height: "100%",
   },
 });
-
-/* <AnimatePresence>
-        {showAddButton && (
-          <View
-            style={{
-              position: "absolute",
-              top: pressLocation.y - 25,
-              left: pressLocation.x - 25,
-            }}
-          >
-            <CirclePlusButton handlePress={() => console.log("pressed")} />
-          </View>
-        )}
-      </AnimatePresence> */

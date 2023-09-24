@@ -1,14 +1,14 @@
 import { useAuthStorage } from "@/store/authStore";
-import { AuthChallengeResult, SignedAuthChallenge } from "@/types";
 import { gql } from "@apollo/client";
 import { useEffect } from "react";
-import { Image, Text, TouchableOpacity, View } from "react-native";
+import React, { Image, Text, TouchableOpacity, View } from "react-native";
 import LensLogo from "../../assets/lens-logo.png";
 import {
   useAuthenticateMutation,
   useChallengeLazyQuery,
   useProfilesLazyQuery,
 } from "./gql/LoginWithLensButton.generated";
+
 gql`
   query Verify($request: VerifyRequest!) {
     verify(request: $request)
@@ -49,12 +49,14 @@ gql`
 
 export function LoginWithLensButton() {
   const address = useAuthStorage((state) => state.address);
+  const [
+    getProfiles,
+    { data: profilesData, loading: profilesLoading, error: profileError },
+  ] = useProfilesLazyQuery();
   const client = useAuthStorage((state) => state.client);
   const setToken = useAuthStorage((state) => state.setToken);
   const setRefreshToken = useAuthStorage((state) => state.setRefreshToken);
 
-  const [getProfiles, { data: profilesData, loading: profilesLoading }] =
-    useProfilesLazyQuery();
   const [getChallenge, { data: challengeData, loading: challengeLoading }] =
     useChallengeLazyQuery();
 
@@ -62,18 +64,6 @@ export function LoginWithLensButton() {
     authenticate,
     { data: authenticateData, loading: authenticateLoading },
   ] = useAuthenticateMutation();
-
-  async function handleLensLogin() {
-    await getProfiles({
-      variables: {
-        request: {
-          where: {
-            ownedBy: address as any, // this is totally a bug eh?
-          },
-        },
-      },
-    });
-  }
 
   useEffect(() => {
     if (!profilesLoading && profilesData) {
@@ -132,11 +122,25 @@ export function LoginWithLensButton() {
     }
   }, [authenticateData, authenticateLoading]);
 
+  function handleLensLogin() {
+    console.log("getting profiles", address);
+    getProfiles({
+      variables: {
+        request: {
+          where: {
+            ownedBy: address as any,
+          },
+        },
+      },
+    });
+  }
+
+  console.log("error", profileError);
   return (
     <View className="flex flex-1 items-center justify-center">
       <TouchableOpacity
         className="flex items-center justify-center bg-[#C3E4CD] rounded-3xl py-6 px-6 shadow-lg transition duration-300 ease-in-out hover:bg-[#AED4BC] focus:bg-[#99C4AB] active:bg-[#82B49A]"
-        onPress={handleLensLogin}
+        onPress={() => handleLensLogin()}
       >
         <Image source={LensLogo} />
         <Text

@@ -18,7 +18,6 @@ import {
 import { setContext } from "@apollo/client/link/context";
 import { NavigationContainer } from "@react-navigation/native";
 import { WalletConnectModal } from "@walletconnect/modal-react-native";
-import { useEffect } from "react";
 import "react-native-gesture-handler";
 import "react-native-reanimated";
 import AppNavigator from "./AppNavigation"; // adjust the import as needed
@@ -49,12 +48,12 @@ export default function App() {
   const token = useAuthStorage((state) => state.token);
   const setVerified = useAuthStorage((state) => state.setVerified);
 
-  useEffect(() => {
-    // verify toekn here
-    if (token) {
-      setVerified(true); // todo
-    }
-  }, [token]);
+  // useEffect(() => {
+  //   // verify toekn here
+  //   if (token) {
+  //     setVerified(true); // todo
+  //   }
+  // }, [token]);
 
   const providerMetadata = {
     name: "Memory Sun",

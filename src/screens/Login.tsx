@@ -21,15 +21,15 @@ const WalletConnectButton = ({ onConnect }) => {
 };
 
 export default function Login() {
-  const { isOpen, open, close, provider, isConnected, address } =
-    useWalletConnectModal();
-
   const client = useAuthStorage((state) => state.client);
   const setClient = useAuthStorage((state) => state.setClient);
   const setAddress = useAuthStorage((state) => state.setAddress);
 
   const publicClient = useAuthStorage((state) => state.publicClient);
   const setPublicClient = useAuthStorage((state) => state.setPublicClient);
+
+  const { isOpen, open, close, provider, isConnected, address } =
+    useWalletConnectModal();
 
   const onConnect = () => {
     return open();

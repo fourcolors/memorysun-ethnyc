@@ -1,42 +1,58 @@
-import * as Types from '../../types';
+import * as Types from "../../types";
 
-import { gql } from '@apollo/client';
-import * as Apollo from '@apollo/client';
+import * as Apollo from "@apollo/client";
+import { gql } from "@apollo/client";
 const defaultOptions = {} as const;
 export type VerifyQueryVariables = Types.Exact<{
   request: Types.VerifyRequest;
 }>;
 
-
-export type VerifyQuery = { __typename?: 'Query', verify: boolean };
+export type VerifyQuery = { __typename?: "Query"; verify: boolean };
 
 export type ChallengeQueryVariables = Types.Exact<{
   request: Types.ChallengeRequest;
 }>;
 
-
-export type ChallengeQuery = { __typename?: 'Query', challenge: { __typename?: 'AuthChallengeResult', id: any, text: string } };
+export type ChallengeQuery = {
+  __typename?: "Query";
+  challenge: { __typename?: "AuthChallengeResult"; id: any; text: string };
+};
 
 export type AuthenticateMutationVariables = Types.Exact<{
   request: Types.SignedAuthChallenge;
 }>;
 
-
-export type AuthenticateMutation = { __typename?: 'Mutation', authenticate: { __typename?: 'AuthenticationResult', accessToken: any, refreshToken: any } };
+export type AuthenticateMutation = {
+  __typename?: "Mutation";
+  authenticate: {
+    __typename?: "AuthenticationResult";
+    accessToken: any;
+    refreshToken: any;
+  };
+};
 
 export type ProfilesQueryVariables = Types.Exact<{
   request: Types.ProfilesRequest;
 }>;
 
-
-export type ProfilesQuery = { __typename?: 'Query', profiles: { __typename?: 'PaginatedProfileResult', items: Array<{ __typename?: 'Profile', id: any }>, pageInfo: { __typename?: 'PaginatedResultInfo', next?: any | null, prev?: any | null } } };
-
+export type ProfilesQuery = {
+  __typename?: "Query";
+  profiles: {
+    __typename?: "PaginatedProfileResult";
+    items: Array<{ __typename?: "Profile"; id: any }>;
+    pageInfo: {
+      __typename?: "PaginatedResultInfo";
+      next?: any | null;
+      prev?: any | null;
+    };
+  };
+};
 
 export const VerifyDocument = gql`
-    query Verify($request: VerifyRequest!) {
-  verify(request: $request)
-}
-    `;
+  query Verify($request: VerifyRequest!) {
+    verify(request: $request)
+  }
+`;
 
 /**
  * __useVerifyQuery__
@@ -54,25 +70,38 @@ export const VerifyDocument = gql`
  *   },
  * });
  */
-export function useVerifyQuery(baseOptions: Apollo.QueryHookOptions<VerifyQuery, VerifyQueryVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<VerifyQuery, VerifyQueryVariables>(VerifyDocument, options);
-      }
-export function useVerifyLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<VerifyQuery, VerifyQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<VerifyQuery, VerifyQueryVariables>(VerifyDocument, options);
-        }
+export function useVerifyQuery(
+  baseOptions: Apollo.QueryHookOptions<VerifyQuery, VerifyQueryVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<VerifyQuery, VerifyQueryVariables>(
+    VerifyDocument,
+    options
+  );
+}
+export function useVerifyLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<VerifyQuery, VerifyQueryVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<VerifyQuery, VerifyQueryVariables>(
+    VerifyDocument,
+    options
+  );
+}
 export type VerifyQueryHookResult = ReturnType<typeof useVerifyQuery>;
 export type VerifyLazyQueryHookResult = ReturnType<typeof useVerifyLazyQuery>;
-export type VerifyQueryResult = Apollo.QueryResult<VerifyQuery, VerifyQueryVariables>;
+export type VerifyQueryResult = Apollo.QueryResult<
+  VerifyQuery,
+  VerifyQueryVariables
+>;
 export const ChallengeDocument = gql`
-    query Challenge($request: ChallengeRequest!) {
-  challenge(request: $request) {
-    id
-    text
+  query Challenge($request: ChallengeRequest!) {
+    challenge(request: $request) {
+      id
+      text
+    }
   }
-}
-    `;
+`;
 
 /**
  * __useChallengeQuery__
@@ -90,26 +119,47 @@ export const ChallengeDocument = gql`
  *   },
  * });
  */
-export function useChallengeQuery(baseOptions: Apollo.QueryHookOptions<ChallengeQuery, ChallengeQueryVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<ChallengeQuery, ChallengeQueryVariables>(ChallengeDocument, options);
-      }
-export function useChallengeLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<ChallengeQuery, ChallengeQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<ChallengeQuery, ChallengeQueryVariables>(ChallengeDocument, options);
-        }
-export type ChallengeQueryHookResult = ReturnType<typeof useChallengeQuery>;
-export type ChallengeLazyQueryHookResult = ReturnType<typeof useChallengeLazyQuery>;
-export type ChallengeQueryResult = Apollo.QueryResult<ChallengeQuery, ChallengeQueryVariables>;
-export const AuthenticateDocument = gql`
-    mutation Authenticate($request: SignedAuthChallenge!) {
-  authenticate(request: $request) {
-    accessToken
-    refreshToken
-  }
+export function useChallengeQuery(
+  baseOptions: Apollo.QueryHookOptions<ChallengeQuery, ChallengeQueryVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<ChallengeQuery, ChallengeQueryVariables>(
+    ChallengeDocument,
+    options
+  );
 }
-    `;
-export type AuthenticateMutationFn = Apollo.MutationFunction<AuthenticateMutation, AuthenticateMutationVariables>;
+export function useChallengeLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    ChallengeQuery,
+    ChallengeQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<ChallengeQuery, ChallengeQueryVariables>(
+    ChallengeDocument,
+    options
+  );
+}
+export type ChallengeQueryHookResult = ReturnType<typeof useChallengeQuery>;
+export type ChallengeLazyQueryHookResult = ReturnType<
+  typeof useChallengeLazyQuery
+>;
+export type ChallengeQueryResult = Apollo.QueryResult<
+  ChallengeQuery,
+  ChallengeQueryVariables
+>;
+export const AuthenticateDocument = gql`
+  mutation Authenticate($request: SignedAuthChallenge!) {
+    authenticate(request: $request) {
+      accessToken
+      refreshToken
+    }
+  }
+`;
+export type AuthenticateMutationFn = Apollo.MutationFunction<
+  AuthenticateMutation,
+  AuthenticateMutationVariables
+>;
 
 /**
  * __useAuthenticateMutation__
@@ -128,26 +178,40 @@ export type AuthenticateMutationFn = Apollo.MutationFunction<AuthenticateMutatio
  *   },
  * });
  */
-export function useAuthenticateMutation(baseOptions?: Apollo.MutationHookOptions<AuthenticateMutation, AuthenticateMutationVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<AuthenticateMutation, AuthenticateMutationVariables>(AuthenticateDocument, options);
-      }
-export type AuthenticateMutationHookResult = ReturnType<typeof useAuthenticateMutation>;
-export type AuthenticateMutationResult = Apollo.MutationResult<AuthenticateMutation>;
-export type AuthenticateMutationOptions = Apollo.BaseMutationOptions<AuthenticateMutation, AuthenticateMutationVariables>;
+export function useAuthenticateMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    AuthenticateMutation,
+    AuthenticateMutationVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<
+    AuthenticateMutation,
+    AuthenticateMutationVariables
+  >(AuthenticateDocument, options);
+}
+export type AuthenticateMutationHookResult = ReturnType<
+  typeof useAuthenticateMutation
+>;
+export type AuthenticateMutationResult =
+  Apollo.MutationResult<AuthenticateMutation>;
+export type AuthenticateMutationOptions = Apollo.BaseMutationOptions<
+  AuthenticateMutation,
+  AuthenticateMutationVariables
+>;
 export const ProfilesDocument = gql`
-    query Profiles($request: ProfilesRequest!) {
-  profiles(request: $request) {
-    items {
-      id
-    }
-    pageInfo {
-      next
-      prev
+  query Profiles($request: ProfilesRequest!) {
+    profiles(request: $request) {
+      items {
+        id
+      }
+      pageInfo {
+        next
+        prev
+      }
     }
   }
-}
-    `;
+`;
 
 /**
  * __useProfilesQuery__
@@ -165,14 +229,32 @@ export const ProfilesDocument = gql`
  *   },
  * });
  */
-export function useProfilesQuery(baseOptions: Apollo.QueryHookOptions<ProfilesQuery, ProfilesQueryVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<ProfilesQuery, ProfilesQueryVariables>(ProfilesDocument, options);
-      }
-export function useProfilesLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<ProfilesQuery, ProfilesQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<ProfilesQuery, ProfilesQueryVariables>(ProfilesDocument, options);
-        }
+export function useProfilesQuery(
+  baseOptions: Apollo.QueryHookOptions<ProfilesQuery, ProfilesQueryVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<ProfilesQuery, ProfilesQueryVariables>(
+    ProfilesDocument,
+    options
+  );
+}
+export function useProfilesLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    ProfilesQuery,
+    ProfilesQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<ProfilesQuery, ProfilesQueryVariables>(
+    ProfilesDocument,
+    options
+  );
+}
 export type ProfilesQueryHookResult = ReturnType<typeof useProfilesQuery>;
-export type ProfilesLazyQueryHookResult = ReturnType<typeof useProfilesLazyQuery>;
-export type ProfilesQueryResult = Apollo.QueryResult<ProfilesQuery, ProfilesQueryVariables>;
+export type ProfilesLazyQueryHookResult = ReturnType<
+  typeof useProfilesLazyQuery
+>;
+export type ProfilesQueryResult = Apollo.QueryResult<
+  ProfilesQuery,
+  ProfilesQueryVariables
+>;
